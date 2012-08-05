@@ -1,80 +1,75 @@
 import re
+import subprocess
+import os
+
+"""
+	compile indentation based LESS (LESS+) into CSS
+	this module relies on the lessc binary (which comes with the less node package) for compiling LESS into CSS, but the compile_LESSplus method can still be used to compile LESS+ into regular LESS without lessc
+"""
+
+TMP_DIR = os.path.dirname(__file__) + '/tmp/'  # holds temporary files, should be empty, directory must already exist
 
 
-def count_lines(text):
+def compile(LESSplus):
+	"""
+		compile LESS+ directly into CSS and return the CSS as a string
+		this is the reccomended way of using the LESS+ compiler, but it relies on lessc
+	"""
+	return compile_LESS(compile_LESSplus(LESSplus))
+
+
+def _count_lines(text):
 	return len(re.findall(r'\n', text))
 
 
-def statement(scanner, token):
+def _statement(scanner, token):
 	"""token for rules, selectors and even mixins. the characters which must be added are determined by indentation"""
 	return "statement", token
 
 
-def indent(scanner, token): return "indent", token
+def _indent(scanner, token): return "indent", token
 
 
-def comment(scanner, token):
+def _comment(scanner, token):
 	"""token for a comment, this also captures any whitespace in front of the comment and newlines in the comment, so the indentation of the comment, and linebreaks are preserved without creating / parsing indent tokens. Any  are also captured because """
 	return "comment", token
 
 
-def newline(scanner, token): return ("newline",)
+def _newline(scanner, token): return ("newline",)
 
 
-def parse(inputLESS):
-	"""convert indentation based LESS into regular LESS"""
+def compile_LESSplus(LESSplus):
+	"""convert indentation based LESS (LESS+) into regular LESS"""
 	scanner = re.Scanner([
-		(r"[\t]*//.*", comment),
-		(r"[\t]*\/\*(.|\n)*(?!\/\*)(.|\n)*\*\/", comment),  # css style
-		(r"\t", indent),
-		(r"\n", newline),
-		(r"[^\n/]*", statement),
+		(r"[\t]*//.*", _comment),
+		(r"[\t]*\/\*(.|\n)*(?!\/\*)(.|\n)*\*\/", _comment),  # css style
+		(r"\t", _indent),
+		(r"\n", _newline),
+		(r"[^\n/]*", _statement),
 		(r"[\s+]", None),
 	])
 
-	tokens, remainder = scanner.scan(inputLESS)
+	tokens, remainder = scanner.scan(LESSplus)
 
 	#check if there is any code that didn't get tokenized
 	if remainder != "":
-		print 'ERROR: invalid syntax on line ' + str(count_lines(inputLESS) - count_lines(remainder))
+		print 'ERROR: invalid syntax on line ' + str(_count_lines(LESSplus) - _count_lines(remainder))
 
-	#parse all the data in to an array with one entry per line of code
+	#parse all the data in to another array to combine indents with statments
 	lines = []
-
-	i = 0
-	while i in range(len(tokens)):
-		indents = 0
-
-		if tokens[i][0] == 'indent':
-			#count number of indents starting line
-			for e in range(i, len(tokens)):
-				if tokens[e][0] != 'indent':
-					break  # stop counting
-
-			indents = e - i  # so e = total indents (number of indents it passed over)
-			i = e  # move index up to where the last loop ended
-
-		if tokens[i][0] == 'statement':
-			text = tokens[i][1]
-
-			#process optional comment
-			if tokens[i + 1][0] == 'comment':
-				i += 1
-				comment_text = tokens[i][1]
-			else:
-				comment_text = ''
-
-			lines.append((indents, text, comment_text))
-
-			if tokens[i + 1][0] != 'newline': break  # statements need a newline after them, except at the end of the code
-
-			i += 1  # pass the newline
-		elif tokens[i][0] == 'newline' or tokens[i][0] == 'comment':
-			lines.append(tokens[i])  # directly add blank line or comment
+	indents = 0
+	for token in tokens:
+		if token[0] == 'indent':
+			indents += 1
+		elif token[0] == 'statement':
+			lines.append((indents, token[1]))
+			indents = 0
+		elif token[0] == 'newline' or token[0] == 'comment':
+			lines.append(token)  # directly add blank lines or comments (they need no processing)
 		else:
-			return "error unexpected token"
+			return 'error unexpected token'
 
-		i += 1  # continue the loop
+	del tokens  # not needed anymore
 
 	i = 0
 	output = ''
@@ -102,19 +97,27 @@ def parse(inputLESS):
 			else:
 				return 'ERROR: unexpected indent'
 
-			output += lines[i][2]  # output comment if there is one
-
 			# deal with closing blocks
 			if next_indentation < lines[i][0]:
 				output += '}' * (lines[i][0] - next_indentation)
-
-			output += '\n'
 
 		i += 1
 
 	return output
 
-print parse("""
+
+def compile_LESS(less_code):
+	"""
+		compile LESS code into CSS using the lessc binary (which must be installed for this to work)
+		return a string containing the compiled CSS
+	"""
+	temp_file = TMP_DIR + '/style.less'
+	open(temp_file, 'w').write(less_code)
+	css = subprocess.check_output(['lessc', '--yui-compress', temp_file])
+	os.remove(temp_file)
+	return css
+
+print compile_LESSplus("""
 @import "lib.css"
 
 .border-radius (@radius: 5px) //a mixin
