@@ -18,10 +18,6 @@ def compile(LESSplus):
 	return compile_LESS(compile_LESSplus(LESSplus))
 
 
-def _count_lines(text):
-	return len(re.findall(r'\n', text))
-
-
 def _statement(scanner, token):
 	"""token for rules, selectors and even mixins. the characters which must be added are determined by indentation"""
 	return "statement", token
@@ -53,7 +49,7 @@ def compile_LESSplus(LESSplus):
 
 	#check if there is any code that didn't get tokenized
 	if remainder != "":
-		print 'ERROR: invalid syntax on line ' + str(_count_lines(LESSplus) - _count_lines(remainder))
+		print 'ERROR: invalid syntax on line ' + str(LESSplus.count('\n') - remainder.count('\n'))  # get line num by subtracting total remaining lines from input lines
 
 	#parse all the data in to another array to combine indents with statments
 	lines = []
@@ -67,7 +63,7 @@ def compile_LESSplus(LESSplus):
 		elif token[0] == 'newline' or token[0] == 'comment':
 			lines.append(token)  # directly add blank lines or comments (they need no processing)
 		else:
-			return 'error unexpected token'
+			return 'error: unexpected token'
 
 	del tokens  # not needed anymore
 
