@@ -51,6 +51,8 @@ LESS+ is a compiler which takes indentation-based LESS and outputs regular LESS.
 
 ...which gets compiled into normal CSS like LESS code always is.
 
+The syntax of indentation based LESS (called LESS+) is the same as properly formatted LESS, just without any curly braces or semicolons (similar to the syntax of SASS). This helps make code more concise and is good for people who already properly indent code, because it uses these indentations in place of the regular characters (curly braces & semicolons) to make a lighter syntax.
+
 ##Usage
 
 In python you can use:
@@ -61,10 +63,10 @@ In python you can use:
 	@color: #4D926F
 
 	#header
-	  color: @color
+		color: @color
 
 	h2
-	  color: @color
+		color: @color
 	""")
 
 
