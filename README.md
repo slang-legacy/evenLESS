@@ -1,7 +1,7 @@
-LESSplus
-========
+#LESSplus
+=========
 
-LESSplus is a compiler which takes indentation-based LESS and outputs regular LESS. For example, this LESS+ code: 
+LESS+ is a compiler which takes indentation-based LESS and outputs regular LESS. For example, this LESS+ code: 
 
 	@import "lib.css"
 
@@ -51,11 +51,32 @@ LESSplus is a compiler which takes indentation-based LESS and outputs regular LE
 
 ...which gets compiled into normal CSS like LESS code always is.
 
+##Usage
 
-##Important Features:
+In python you can use:
+	import lessplus
+
+	lessplus.compile("""
+	@color: #4D926F
+
+	#header
+	  color: @color
+
+	h2
+	  color: @color
+	""")
+
+
+
+
+##Features
  - line-to-line conversion (so all lines match up between the source and original)
  - LESS+ syntax works with existing LESS syntax highlighting
  - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality
+ - LESS+ can be compiled either to LESS (to use in the client-side LESS compiler, or another LESS compiler), or automatically into CSS (utilizing lessc)
 
-*Note: I realize that the curly brackets at the end of blocks should be on their own lines. However they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original. If you want the output to be more readable then you can pass it through a LESS formatter*
+
+##Notes
+ - I realize that the curly brackets at the end of blocks should be on their own lines. However they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original. If you want the output to be more readable then you can pass it through a LESS formatter.
+ - LESS+ is just an abbreviation for LESSplus
 
