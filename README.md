@@ -73,7 +73,7 @@ In python you can use:
 ##Features
  - line-to-line conversion (so all lines match up between the source and original)
  - LESS+ syntax works with existing LESS syntax highlighting
- - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality
+ - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality, but for LESS+
  - LESS+ can be compiled either to LESS (to use in the client-side LESS compiler, or another LESS compiler), or automatically into CSS (utilizing lessc)
 
 

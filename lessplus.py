@@ -112,36 +112,3 @@ def compile_LESS(less_code):
 	css = subprocess.check_output(['lessc', '--yui-compress', temp_file])
 	os.remove(temp_file)
 	return css
-
-print compile_LESSplus("""
-@import "lib.css"
-
-.border-radius (@radius: 5px) //a mixin
-	border-radius: @radius // a cool comment
-	-moz-border-radius: @radius
-	color: @radius
-
-//a comment on its own line
-		//an indented comment on its own line
-
-		/*an indented comment on its own line*/
-
-/*a multi-
-	line
-comment with some
-indentation*/
-
-		/*a multi-
-			line
-		comment with some
-		indentation*/
-
-#header
-	.border-radius(4px)
-
-	#header
-		.border-radius(4px)
-
-.button
-	.border-radius
-""")
