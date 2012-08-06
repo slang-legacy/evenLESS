@@ -1,7 +1,7 @@
-LESSplus
+evenLESS
 =========
 
-LESS+ is a compiler which takes indentation-based LESS and outputs regular LESS. For example, this LESS+ code: 
+evenLESS is a indentation-based language which compiles into LESS. It follows the exact same syntax as properly formatted LESS, except it has no curly braces or semi-colins. For example, this evenLESS code: 
 
 	@import "lib.css"
 
@@ -51,15 +51,15 @@ LESS+ is a compiler which takes indentation-based LESS and outputs regular LESS.
 
 ...which gets compiled into normal CSS like LESS code always is.
 
-The syntax of indentation based LESS (called LESS+) is the same as properly formatted LESS, just without any curly braces or semicolons (similar to the syntax of SASS). This helps make code more concise and is good for people who already properly indent code, because it uses these indentations in place of the regular characters (curly braces & semicolons) to make a lighter syntax.
+This indentation-based syntax helps make code more concise and is good for people who already properly indent code, because it uses these indentations in place of the regular characters (curly braces & semicolons) to make a much lighter syntax.
 
 ##Usage
 
 In python you can use:
 
-	import lessplus
+	import evenless
 
-	print lessplus.compile("""
+	print evenless.compile("""
 	@color: #4D926F
 
 	#header
@@ -72,12 +72,13 @@ In python you can use:
 
 ##Features
  - line-to-line conversion (so all lines match up between the source and original)
- - LESS+ syntax works with existing LESS syntax highlighting
- - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality, but for LESS+
- - LESS+ can be compiled either to LESS (to use in the client-side LESS compiler, or another LESS compiler), or automatically into CSS (utilizing lessc)
+ - evenLESS syntax works with existing LESS syntax highlighting
+ - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality, but for evenLESS
+ - evenLESS can be compiled into either LESS (to use in the client-side LESS compiler, or another LESS compiler), or automatically into CSS
+ - fully compatible with all versions of CSS, as well as browser specific extensions
 
 
 ##Notes
- - I realize that the curly brackets at the end of blocks should be on their own lines. However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original. If you want the output to be more readable then you can pass it through a LESS formatter.
- - LESS+ is just an abbreviation for LESSplus
+ - Technically the outputted LESS should have the curly brackets at the end of blocks be on their own lines. However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original (so the line numbers in error messages match up). If you want the output to be more readable then you can pass it through a LESS formatter.
+
 

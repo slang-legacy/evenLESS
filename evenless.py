@@ -3,21 +3,21 @@ import subprocess
 import os
 
 """
-	compile indentation based LESS (LESS+) into CSS
-	this module relies on the lessc binary (which comes with the less node package) for compiling LESS into CSS, but the compile_LESSplus method can still be used to compile LESS+ into regular LESS without lessc
+	compile indentation based LESS (evenLESS) into CSS
+	this module relies on the lessc binary (which comes with the less node package) for compiling LESS into CSS, but the compile_evenLESS method can still be used to compile evenLESS into regular LESS without lessc
 """
 
 TMP_DIR = os.path.dirname(__file__) + '/tmp/'  # holds temporary files, should be empty, directory must already exist
 
 
-def compile(LESSplus):
+def compile(evenLESS):
 	"""
-		compile LESS+ directly into CSS and return the CSS as a string
-		this is the reccomended way of using the LESS+ compiler, but it relies on lessc
+		compile evenLESS directly into CSS and return the CSS as a string
+		this is the reccomended way of using the evenLESS compiler, but it relies on lessc
 	"""
-	return compile_LESS(compile_LESSplus(LESSplus))
+	return compile_LESS(compile_evenLESS(evenLESS))
 
-
+#functions for tokens:
 def _statement(scanner, token):
 	"""token for rules, selectors and even mixins. the characters which must be added are determined by indentation"""
 	return "statement", token
@@ -34,8 +34,8 @@ def _comment(scanner, token):
 def _newline(scanner, token): return ("newline",)
 
 
-def compile_LESSplus(LESSplus):
-	"""convert indentation based LESS (LESS+) into regular LESS"""
+def compile_evenLESS(evenLESS):
+	"""convert indentation based LESS (evenLESS) into regular LESS"""
 	scanner = re.Scanner([
 		(r"[\t]*//.*", _comment),
 		(r"[\t]*\/\*(.|\n)*(?!\/\*)(.|\n)*\*\/", _comment),  # css style
@@ -45,11 +45,11 @@ def compile_LESSplus(LESSplus):
 		(r"[\s+]", None),
 	])
 
-	tokens, remainder = scanner.scan(LESSplus)
+	tokens, remainder = scanner.scan(evenLESS)
 
 	#check if there is any code that didn't get tokenized
 	if remainder != "":
-		print 'ERROR: invalid syntax on line ' + str(LESSplus.count('\n') - remainder.count('\n'))  # get line num by subtracting total remaining lines from input lines
+		print 'ERROR: invalid syntax on line ' + str(evenLESS.count('\n') - remainder.count('\n'))  # get line num by subtracting total remaining lines from input lines
 
 	#parse all the data in to another array to combine indents with statments
 	lines = []
@@ -63,7 +63,7 @@ def compile_LESSplus(LESSplus):
 		elif token[0] == 'newline' or token[0] == 'comment':
 			lines.append(token)  # directly add blank lines or comments (they need no processing)
 		else:
-			return 'error: unexpected token'
+			return 'ERROR: unexpected token'
 
 	del tokens  # not needed anymore
 
