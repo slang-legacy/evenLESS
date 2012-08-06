@@ -1,7 +1,7 @@
 evenLESS
 =========
 
-evenLESS is a indentation-based language which compiles into LESS. It follows the exact same syntax as properly formatted LESS, except it has no curly braces or semi-colins. For example, this evenLESS code: 
+evenLESS is an indentation-based language which compiles into LESS. It follows the exact same syntax as properly formatted LESS, except it has no curly braces or semi-colins. For example, this evenLESS code: 
 
 	@import "lib.css"
 
@@ -80,5 +80,4 @@ In python you can use:
 
 ##Notes
  - Technically the outputted LESS should have the curly brackets at the end of blocks be on their own lines. However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original (so the line numbers in error messages match up). If you want the output to be more readable then you can pass it through a LESS formatter.
-
-
+ - evenLESS is tab-indented (no spaces, until compatibility is added for this)
