@@ -6,7 +6,7 @@ evenLESS is an indentation-based language which compiles into LESS. It follows t
 ```sass
 @import "lib.css"
 
-.border-radius (@radius: 5px) //a parametric mixin
+.border-radius(@radius: 5px) //a parametric mixin
 	border-radius: @radius
 	-moz-border-radius: @radius
 	color: @radius
@@ -19,10 +19,11 @@ evenLESS is an indentation-based language which compiles into LESS. It follows t
 	.nav // nested!
 		color: #000
 
-/*a multi-
-line
-comment*/
+/*a css style comment*/
 
+div span, p span, nav span{ //some real css (evenLESS can parse this too)
+    font-size: 18px;
+}
 
 .button
 	.border-radius
@@ -33,7 +34,7 @@ comment*/
 ```scss
 @import "lib.css";
 
-.border-radius (@radius: 5px){//a parametric mixin
+.border-radius(@radius: 5px){//a parametric mixin
 	border-radius: @radius;
 	-moz-border-radius: @radius;
 	color: @radius;}
@@ -46,9 +47,10 @@ comment*/
 	.nav{// nested!
 		color: #000;}}
 
-/*a multi-
-line
-comment*/
+/*a css style comment*/
+
+div span, p span, nav span{//some real css (evenLESS can parse this too)
+	font-size: 18px;}
 
 
 .button{

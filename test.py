@@ -42,6 +42,11 @@ comment*/
 	a-real-stray-rule: #000;
 }
 
+div span, p span, nav span{
+	font-size: 18px;
+}
+
+
 //back to evenLESS
 #header
 	.border-radius(4px)
