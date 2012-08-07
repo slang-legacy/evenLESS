@@ -3,7 +3,7 @@ evenLESS
 
 evenLESS is an indentation-based language which compiles into LESS. It follows the exact same syntax as properly formatted LESS, except it does not need curly braces or semi-colins. For example, this evenLESS code:
 
-```LESS
+```less
 @import "lib.css"
 
 .border-radius (@radius: 5px) //a parametric mixin
@@ -30,7 +30,7 @@ comment*/
 
 ...is compiled into this LESS code:
 
-```LESS
+```css
 @import "lib.css";
 
 .border-radius (@radius: 5px){//a parametric mixin
