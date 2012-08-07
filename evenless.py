@@ -7,7 +7,7 @@ import os
 	this module relies on the lessc binary (which comes with the less node package) for compiling LESS into CSS, but the compile_evenLESS method can still be used to compile evenLESS into regular LESS without lessc
 """
 
-TMP_DIR = os.path.dirname(__file__) + '/tmp/'  # holds temporary files, should be empty, directory must already exist
+TMP_FILE = os.path.dirname(__file__) + '/tmp/style.less'  # holds temporary files, should be empty, directory must already exist
 
 
 def compile(evenLESS):
@@ -37,6 +37,7 @@ def _newline(scanner, token): return ("newline",)
 def compile_evenLESS(evenLESS):
 	"""convert indentation based LESS (evenLESS) into regular LESS"""
 	scanner = re.Scanner([
+		(r"[s+}s+]", None),
 		(r"[\t]*//.*", _comment),
 		(r"[\t]*\/\*(.|\n)*(?!\/\*)(.|\n)*\*\/", _comment),  # css style
 		(r"\t", _indent),
@@ -77,7 +78,9 @@ def compile_evenLESS(evenLESS):
 			output += lines[i][1]
 		else:  # statement
 
-			output += "\t" * lines[i][0] + lines[i][1].strip()  # print indentation and text
+			text = lines[i][1].strip()
+
+			output += "\t" * lines[i][0] + text  # print indentation and text
 
 			#look ahead to the next statement to find indentation
 			next_indentation = 0  # if there isn't another line then assume 0 indentation to close all brackets at the end of the file
@@ -86,12 +89,13 @@ def compile_evenLESS(evenLESS):
 					next_indentation = lines[e][0]
 					break
 
-			if lines[i][0] + 1 == next_indentation:  # must be beginning of a block if next line has one more indent
-				output += '{'  # remove the ":" and whitespace around the text first
-			elif lines[i][0] >= next_indentation:  # must be a rule
-				output += ';'
-			else:
-				return 'ERROR: unexpected indent'
+			if text[-1] != '{' and text[-1] != ';':  # don't add a ';' or '{' if it is already there
+				if lines[i][0] + 1 == next_indentation:  # must be beginning of a block if next line has one more indent
+					output += '{'
+				elif lines[i][0] >= next_indentation:  # must be a rule
+					output += ';'
+				else:
+					return 'ERROR: unexpected indent on line ' + output.count('\n')
 
 			# deal with closing blocks
 			if next_indentation < lines[i][0]:
@@ -107,8 +111,8 @@ def compile_LESS(less_code):
 		compile LESS code into CSS using the lessc binary (which must be installed for this to work)
 		return a string containing the compiled CSS
 	"""
-	temp_file = TMP_DIR + '/style.less'
-	open(temp_file, 'w').write(less_code)
-	css = subprocess.check_output(['lessc', '--yui-compress', temp_file])
-	os.remove(temp_file)
+	open(TMP_FILE, 'w').write(less_code)
+	print TMP_FILE
+	css = subprocess.check_output(['lessc', '--yui-compress', TMP_FILE])
+	os.remove(TMP_FILE)
 	return css
