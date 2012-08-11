@@ -68,7 +68,7 @@ In python you can use:
 ```python
 import evenless
 
-print evenless.compile("""
+evenLESS_code = """
 @color: #4D926F
 
 #header
@@ -76,7 +76,19 @@ print evenless.compile("""
 
 h2
 	color: @color
-""")
+"""
+
+print evenless.compile(evenLESS_code)
+```
+
+or this more robust example which prints out errors if they are raised, which is useful for debugging syntax errors:
+
+```python
+try:
+	print evenless.compile(evenLESS_code)
+except evenless.CalledProcessError as error:
+	print error.output  # print out explanation of error (same as the one returned by lessc)
+
 ```
 
 
@@ -90,5 +102,6 @@ h2
 
 
 ##Notes
- - Technically the outputted LESS should have the curly braces at the end of blocks be on their own lines. However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original (so the line numbers in error messages match up). If you want the output to be more readable then you can pass it through a LESS formatter.
+ - Technically the outputted LESS should have the curly braces at the end of blocks be on their own lines (if it were formatted properly). However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original (so the line numbers in error messages match up). If you want the output to be more readable then you can pass it through a LESS formatter.
  - evenLESS is tab-indented (no spaces, until compatibility is added for this)
+ - If you are just looking to compile LESS using python, checkout the compile_LESS function in this module; it implements a full interface for interacting with lessc and can be used independently from the evenLESS compiler. Thus, it is useful even if you are not using evenLESS.
