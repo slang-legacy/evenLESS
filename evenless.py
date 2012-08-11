@@ -1,13 +1,10 @@
 import re
-import subprocess
-import os
+from subprocess import Popen, PIPE, CalledProcessError
 
 """
 	compile indentation based LESS (evenLESS) into CSS
 	this module relies on the lessc binary (which comes with the less node package) for compiling LESS into CSS, but the compile_evenLESS method can still be used to compile evenLESS into regular LESS without lessc
 """
-
-TMP_FILE = os.path.dirname(__file__) + '/tmp/style.less'  # holds temporary files, should be empty, directory must already exist
 
 
 def compile(evenLESS):
@@ -106,13 +103,51 @@ def compile_evenLESS(evenLESS):
 	return output
 
 
-def compile_LESS(less_code):
+def compile_LESS(less_code, version=False, verbose=False, silent=False, strictimports=False, help=False, compress=False, yuicompress=False, nocolor=False, includepath='', optimization=1):
 	"""
-		compile LESS code into CSS using the lessc binary (which must be installed for this to work)
-		return a string containing the compiled CSS
+		compile LESS code into CSS using the lessc binary (which must be installed for this to work) and return a string containing the compiled CSS
+		all data is sent via stdin (no files are needed, except for imports)
+		version and help are both options which, if true, become the only option sent. they're used to print help/version text, not compile LESS
 	"""
-	open(TMP_FILE, 'w').write(less_code)
-	print TMP_FILE
-	css = subprocess.check_output(['lessc', '--yui-compress', TMP_FILE])
-	os.remove(TMP_FILE)
-	return css
+
+	cmd = ['lessc']  # inital command
+
+	# format command based on options specified for function
+
+	if version:
+		cmd += ['--version']
+	elif help:
+		cmd += ['--help']
+	else:  # if version and help are both false, begin parsing options for actually compiling LESS
+		if verbose:
+			cmd += ['--verbose']
+		if silent:
+			cmd += ['--silent']
+		if strictimports:
+			cmd += ['--strict-imports']
+		if compress:
+			cmd += ['--compress']
+		if yuicompress:
+			cmd += ['--yui-compress']
+		if nocolor:
+			cmd += ['--no-color']
+		if includepath != '':
+			cmd += ['--include-path ' + includepath]
+		if optimization != 1:  # if not default
+			cmd += ['0' + optimization]  # formatted like 00, 01, or 02
+
+		cmd += ['-']  # '-' means no file and makes LESS read from stdin
+
+	lessc = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+	stdoutdata, stderrdata = lessc.communicate(less_code)  # send data to lessc
+
+	if lessc.returncode != 0:
+		# raise same error that subprocess.check_call would raise in this situation
+		# this error will also be raised if there is an error in your LESS code, so you should view CalledProcessError.output if it is raised
+		raise CalledProcessError(
+			returncode=lessc.returncode,
+			cmd=' '.join(cmd),  # put all the args together w/ spaces
+			output=stdoutdata,
+		)
+
+	return stdoutdata
