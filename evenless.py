@@ -147,7 +147,7 @@ def compile_LESS(less_code, version=False, verbose=False, silent=False, strictim
 		raise CalledProcessError(
 			returncode=lessc.returncode,
 			cmd=' '.join(cmd),  # put all the args together w/ spaces
-			output=stdoutdata,
+			output=stderrdata,  # if it is a syntax error in your LESS, this will explain what it was
 		)
 
 	return stdoutdata
