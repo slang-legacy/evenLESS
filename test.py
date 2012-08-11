@@ -2,9 +2,8 @@
 
 import evenless
 
-compiled = evenless.compile(
-"""
-@import "lib.css"
+less = """
+@import "lib.css";;
 
 .border-radius (@radius: 5px) //a parametric mixin
 	border-radius: @radius
@@ -64,6 +63,10 @@ div span, p span, nav span{
 		.border-radius(4px)
 
 """
-)
+try:
+	print evenless.compile(less)
+except evenless.CalledProcessError as error:
+	print error.output
+	print error
 
-print compiled
+
