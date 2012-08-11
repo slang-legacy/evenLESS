@@ -3,7 +3,7 @@
 import evenless
 
 less = """
-@import "lib.css";;
+@import "lib.css";
 
 .border-radius (@radius: 5px) //a parametric mixin
 	border-radius: @radius
