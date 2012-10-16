@@ -94,7 +94,7 @@ except evenless.CalledProcessError as error:
 
 ##Features
  - can be mixed with regular LESS (and obviously, CSS) so long as it is properly indented
- - line-to-line conversion (so all lines match up between the source and original)
+ - line-to-line conversion, so all lines match up between the source and original
  - (**NOT IMPLEMENTED YET**) console interface which replaces lessc with same functionality, but for evenLESS
  - evenLESS can be compiled into either LESS (to use in the client-side LESS compiler, or another LESS compiler), or automatically into CSS
  - fully compatible with all versions of CSS, as well as browser specific extensions
@@ -104,4 +104,4 @@ except evenless.CalledProcessError as error:
 ##Notes
  - Technically the outputted LESS should have the curly braces at the end of blocks be on their own lines (if it were formatted properly). However, they are added to the end of the last line in the block to insure that line numbers are not changed between the source and the original (so the line numbers in error messages match up). If you want the output to be more readable then you can pass it through a LESS formatter.
  - evenLESS is tab-indented (no spaces, until compatibility is added for this)
- - If you are just looking to compile LESS using python, checkout the compile_LESS function in this module; it implements a full interface for interacting with lessc and can be used independently from the evenLESS compiler. Thus, it is useful even if you are not using evenLESS.
+ - If you are just looking to compile LESS using python, checkout the `compile_LESS()` function in this module; it implements a full interface for interacting with lessc and can be used independently from the evenLESS compiler. Thus, it is useful even if you are not using evenLESS.
