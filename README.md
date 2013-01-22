@@ -1,6 +1,13 @@
 evenLESS
 ========
 
+##Update
+As of now, I've stopped working on evenLESS. It was a fun project, and is probably still useful because of it's backwards compatibility with LESS. However, I really like [Stylus](https://github.com/LearnBoost/stylus) more, so I have very little motivation to continue developing this.
+
+If somebody else wants to take this over, go ahead. I'll even link this repo to your fork if you email me.
+
+-------------------------------------
+
 evenLESS is an indentation-based language which compiles into [LESS](http://lesscss.org/). It follows the exact same syntax as properly formatted LESS, except it does not need curly braces or semi-colins. For example, this evenLESS code:
 
 ```scss
